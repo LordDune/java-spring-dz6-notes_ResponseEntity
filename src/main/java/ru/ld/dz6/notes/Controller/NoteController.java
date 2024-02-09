@@ -34,19 +34,32 @@ public class NoteController {
 
     /**
      * Вывод всех заметок
-     * @return
+     * @return возвращается сообщение об успешном выполнении запроса
      */
     @GetMapping
     public ResponseEntity<List<Note>> findAllNotes() {
         return new ResponseEntity<>(service.findAllNotes(), HttpStatus.OK);
     }
 
+    /**
+     * Поиск заметки по id
+     * @param id
+     * @return возвращается сообщение об успешном выполнении запроса или о том, что такой id не найден
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Note> findById(@PathVariable Long id) {
         if (service.findById(id).isPresent()) {
             return new ResponseEntity<>(service.findById(id).get(), HttpStatus.OK);
         } else return ResponseEntity.notFound().build();
     }
+
+    /**
+     * Обновление заметки
+     * @param id
+     * @param note
+     * @return возвращается сообщение об успешном выполнении запроса или о том, что такой id не найден (notFound())
+     * или о том, что ошибочная форма ввода (BAD_REQUEST)
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Note> updateNote(@PathVariable Long id, @RequestBody Note note) {
         try {
@@ -58,6 +71,11 @@ public class NoteController {
         }
     }
 
+    /**
+     * Удаление заметки
+     * @param id
+     * @return возвращается сообщение об успешном удалении заметки или о том, что такой id не найден (notFound())
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNote(@PathVariable Long id) {
         if (service.findById(id).isPresent()) {
